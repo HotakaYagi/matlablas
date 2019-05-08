@@ -36,7 +36,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
 
     /* create output matrix C */
-    plhs[0] = mxCreateDoubleMatrix(1, 1, mxREAL);
+    plhs[0] = mxCreateDoubleMatrix(p, p, mxREAL);
 #if MX_HAS_INTERLEAVED_COMPLEX
     C = mxGetDoubles(plhs[0]);
 #else
@@ -44,5 +44,5 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 #endif
 
     /* Pass arguments to Fortran by reference */
-    C[0] = ddot(&m, A, &n, B, &m);
+    C[0] = ddot(&m, A, &p, B, &p);
 }

@@ -37,5 +37,5 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
 
     /* Pass arguments to Fortran by reference */
-    daxpy(&m, &one, A, &n, B, &m);
+    daxpy(&m, &one, A, &p, B, &p);
 }

@@ -45,5 +45,5 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 #endif
 
     /* Pass arguments to Fortran by reference */
-    dgemv(chn, &m, &p, &one, A, &m, B, &p, &zero, C, &n);
+    dgemv(chn, &m, &p, &one, A, &m, B, &n, &zero, C, &n);
 }
