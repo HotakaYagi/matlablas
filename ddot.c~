@@ -9,7 +9,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     double *A, *B, *C; /* pointers to input & output matrices*/
 #endif
     ptrdiff_t m,n,p;      /* matrix dimensions */
-
+    /* form of op(A) & op(B) to use in matrix multiplication */
+    char *chn = "N";
+    /* scalar values to use in dgemm */
+    double one = 1.0, zero = 0.0;
 
 #if MX_HAS_INTERLEAVED_COMPLEX
     A = mxGetDoubles(prhs[0]); /* first input matrix */
@@ -35,6 +38,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
               "Second input argument must be a real matrix.");
     }
 
+    if (p != mxGetM(prhs[1])) {
+        mexErrMsgIdAndTxt("MATLAB:matrixMultiply:matchdims",
+                "Inner dimensions of matrix multiply do not match.");
+    }
+
     /* create output matrix C */
     plhs[0] = mxCreateDoubleMatrix(1, 1, mxREAL);
 #if MX_HAS_INTERLEAVED_COMPLEX
@@ -44,5 +52,5 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 #endif
 
     /* Pass arguments to Fortran by reference */
-    C[0] = ddot(&m, A, &n, B, &m);
+    C = ddot(&m, A, &n, B, &mm);
 }

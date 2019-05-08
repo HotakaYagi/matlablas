@@ -9,8 +9,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     double *A, *B, *C; /* pointers to input & output matrices*/
 #endif
     ptrdiff_t m,n,p;      /* matrix dimensions */
-
-
+    char *chn = "N";
+    double one = 1.0, zero = 0.0;
+    
 #if MX_HAS_INTERLEAVED_COMPLEX
     A = mxGetDoubles(prhs[0]); /* first input matrix */
     B = mxGetDoubles(prhs[1]); /* second input matrix */
@@ -36,7 +37,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
 
     /* create output matrix C */
-    plhs[0] = mxCreateDoubleMatrix(1, 1, mxREAL);
+    plhs[0] = mxCreateDoubleMatrix(m, n, mxREAL);
 #if MX_HAS_INTERLEAVED_COMPLEX
     C = mxGetDoubles(plhs[0]);
 #else
@@ -44,5 +45,5 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 #endif
 
     /* Pass arguments to Fortran by reference */
-    C[0] = ddot(&m, A, &n, B, &m);
+    dgemv(chn, &m, &p, &one, A, &m, B, &p, &zero, C, &n);
 }

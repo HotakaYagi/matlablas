@@ -4,12 +4,13 @@
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
 #if MX_HAS_INTERLEAVED_COMPLEX
-    mxDouble *A, *B, *C; /* pointers to input & output matrices*/
+    mxDouble *A, *B; /* pointers to input & output matrices*/
 #else
-    double *A, *B, *C; /* pointers to input & output matrices*/
+    double *A, *B; /* pointers to input & output matrices*/
 #endif
     ptrdiff_t m,n,p;      /* matrix dimensions */
-
+    /* scalar values to use in daxpy */
+    double one = 1.0, zero = 0.0;
 
 #if MX_HAS_INTERLEAVED_COMPLEX
     A = mxGetDoubles(prhs[0]); /* first input matrix */
@@ -35,14 +36,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
               "Second input argument must be a real matrix.");
     }
 
-    /* create output matrix C */
-    plhs[0] = mxCreateDoubleMatrix(1, 1, mxREAL);
-#if MX_HAS_INTERLEAVED_COMPLEX
-    C = mxGetDoubles(plhs[0]);
-#else
-    C = mxGetPr(plhs[0]);
-#endif
-
     /* Pass arguments to Fortran by reference */
-    C[0] = ddot(&m, A, &n, B, &m);
+    daxpy(&m, &one, A, &n, B, &m);
 }
